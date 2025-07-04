@@ -1,0 +1,48 @@
+-- Создание таблицы "Adres"
+CREATE TABLE Adres (
+    Id_adresa SERIAL PRIMARY KEY,
+    Gorod VARCHAR(100),
+    Ulica VARCHAR(100),
+    Dom INTEGER,
+    Kvartira INTEGER
+);
+
+-- Создание таблицы "Dolgnosti" (новая таблица для устранения дублирования)
+CREATE TABLE Dolgnosti (
+    Id_dolgnosti SERIAL PRIMARY KEY,
+    Dolgnost VARCHAR(100),
+    Oklad NUMERIC(10,2)
+);
+
+-- Создание таблицы "Podrazdelenie"
+CREATE TABLE Podrazdelenie (
+    Id_podrazdelenie SERIAL PRIMARY KEY,
+    Nazvanie_podrazdeleniya VARCHAR(100),
+    Id_dolgnosti INTEGER REFERENCES Dolgnosti(Id_dolgnosti)
+);
+
+-- Создание таблицы "Tip_prikaza"
+CREATE TABLE Tip_prikaza (
+    Id_tip_prikaza SERIAL PRIMARY KEY,
+    Tip_prikaza VARCHAR(100)
+);
+
+-- Создание таблицы "Sotrudniki"
+CREATE TABLE Sotrudniki (
+    Id_sotrudnika SERIAL PRIMARY KEY,
+    FIO VARCHAR(100),
+    Vozrast INTEGER,
+    Obrazovanie VARCHAR(100),
+    Telefon VARCHAR(20),  -- Изменено на VARCHAR для телефонных номеров
+    Id_adresa INTEGER REFERENCES Adres(Id_adresa),
+    Id_podrazdelenie INTEGER REFERENCES Podrazdelenie(Id_podrazdelenie),
+    Id_dolgnosti INTEGER REFERENCES Dolgnosti(Id_dolgnosti)
+);
+
+-- Создание таблицы "Prikazi"
+CREATE TABLE Prikazi (
+    Nomer_prikaza SERIAL PRIMARY KEY,
+    Data DATE,  -- Изменено на тип DATE для дат
+    Id_sotrudnika INTEGER REFERENCES Sotrudniki(Id_sotrudnika),
+    Id_tip_prikaza INTEGER REFERENCES Tip_prikaza(Id_tip_prikaza)
+);
